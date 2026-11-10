@@ -1,0 +1,52 @@
+name: Build Flutter Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Locate Flutter project
+        id: locate
+        run: |
+          if [ -f mobile/pubspec.yaml ]; then
+            echo "dir=mobile" >> $GITHUB_OUTPUT
+          elif [ -f pubspec.yaml ]; then
+            echo "dir=." >> $GITHUB_OUTPUT
+          else
+            echo "Flutter pubspec.yaml not found!"
+            exit 1
+          fi
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        working-directory: ${{ steps.locate.outputs.dir }}
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: ${{ steps.locate.outputs.dir }}
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ultimate-AI-App-APK
+          path: ${{ steps.locate.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk
