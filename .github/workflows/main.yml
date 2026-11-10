@@ -40,7 +40,11 @@ jobs:
       - name: Install dependencies
         working-directory: ${{ steps.locate.outputs.dir }}
         run: flutter pub get
-
+        
+      - name: Generate Android project
+        working-directory: ${{ steps.locate.outputs.dir }}
+        run: flutter create --platforms=android .
+        
       - name: Build APK
         working-directory: ${{ steps.locate.outputs.dir }}
         run: flutter build apk --release
