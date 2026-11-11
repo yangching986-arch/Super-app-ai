@@ -44,6 +44,34 @@ jobs:
       - name: Generate Android project
         working-directory: ${{ steps.locate.outputs.dir }}
         run: flutter create --platforms=android .
+
+              - name: Add Internet Permission
+        working-directory: ${{ steps.locate.outputs.dir }}
+        run: |
+          python3 - <<'PY'
+          import re
+
+          path = "android/app/src/main/AndroidManifest.xml"
+
+          with open(path, "r") as f:
+              content = f.read()
+
+          permission = '<uses-permission android:name="android.permission.INTERNET"/>'
+
+          if "android.permission.INTERNET" not in content:
+              content = re.sub(
+                  r'(<manifest\b[^>]*>)',
+                  r'\1\n    ' + permission,
+                  content,
+                  count=1
+              )
+
+          with open(path, "w") as f:
+              f.write(content)
+
+          print("Internet permission added successfully.")
+          PY
+          
         
       - name: Build APK
         working-directory: ${{ steps.locate.outputs.dir }}
