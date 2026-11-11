@@ -45,7 +45,7 @@ jobs:
         working-directory: ${{ steps.locate.outputs.dir }}
         run: flutter create --platforms=android .
 
-              - name: Add Internet Permission
+      - name: Add Internet Permission
         working-directory: ${{ steps.locate.outputs.dir }}
         run: |
           python3 - <<'PY'
