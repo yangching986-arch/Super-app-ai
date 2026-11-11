@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const baseUrl = String.fromEnvironment(
   'API_URL',
-  defaultValue: 'http://10.0.2.2:8000',
+  defaultValue: 'https://super-app-ai-npzy.onrender.com',
 );
 
 const bg = Color(0xFF0D1019);
